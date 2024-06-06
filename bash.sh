@@ -11,6 +11,8 @@ echo
 
 # Array of URLs with corresponding descriptions
 urls=(
+    "https://git.io/hysteria.sh hysteria脚本"
+    "https://git.io/oneclick  trojan_v2ray脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/bbr.sh BBR_脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/nginx.sh Nginx_脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/firewall.sh 防火墙脚本"
