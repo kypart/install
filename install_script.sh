@@ -256,7 +256,7 @@ clean_filesystem() {
     echo -e "${YELLOW}3.${NC} 清理系统缓存"
     echo -e "${YELLOW}4.${NC} 一键清理所有临时、日志和缓存文件"
     echo -e "${YELLOW}0.${NC} 返回主菜单"
-    echo -e "${YELLOW}请选择要执行的操作: ${NC}"
+    echo -e "${YELLOW}请选择要执行的操作: ${NC}\n"
     read choice
     case $choice in
         1) sudo rm -rf /tmp/* ;;
