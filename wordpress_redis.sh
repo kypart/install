@@ -5,22 +5,28 @@ echo "警告：此脚本只能在容器内运行！"
 
 # 定义函数来确认用户的选择
 confirm_action() {
-    read -p "输入 1 容器运行，输入 2 退出脚本: " choice
-    case $choice in
-        1)
-            echo "进入容器..."
-            # 在这里添加进入容器的命令
-            ;;
-        2)
-            echo "退出脚本"
-            exit 0
-            ;;
-        *)
-            echo "无效的选择，请重新输入。"
-            confirm_action
-            ;;
-    esac
+    while true; do
+        read -p "输入 1 容器运行，输入 2 退出脚本: " choice
+        case $choice in
+            1)
+                echo "进入容器..."
+                # 在这里添加进入容器的命令
+                break
+                ;;
+            2)
+                echo "等待一秒后退出脚本..."
+                sleep 1
+                exit 0
+                ;;
+            *)
+                echo "无效的选择，请重新输入。"
+                ;;
+        esac
+    done
 }
+
+# 调用函数确认用户的选择
+confirm_action
 
 echo "# 更新包列表并安装必要的构建工具"
 apt update && apt install -y build-essential autoconf
