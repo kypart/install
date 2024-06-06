@@ -1,9 +1,9 @@
 clear
 echo -e "\e[32m#############################################################\e[0m"
-echo -e "\e[32m# Usage: 常用脚本                                             #\e[0m"
-echo -e "\e[32m# Website:  https://cloudflare.com/                           #\e[0m"
-echo -e "\e[32m# Author: emal <noray@cloudflare.com.com>                     #\e[0m"
-echo -e "\e[32m# Github: https://github.com/                                 #\e[0m"
+echo -e "\e[32m# Usage:    常用脚本管理 GitHub Copilot                       #\e[0m"
+echo -e "\e[32m# Website:  https://cloudflare.com/                          #\e[0m"
+echo -e "\e[32m# Author:   emal <noray@cloudflare.com.com>                  #\e[0m"
+echo -e "\e[32m# Github:   https://github.com/                              #\e[0m"
 echo -e "\e[32m#############################################################\e[0m"
 echo
 
