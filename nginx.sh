@@ -160,7 +160,7 @@ function addDomainPort() {
     echo -e "    proxy_set_header X-Real-IP \$remote_addr;" >> "$nginx_domain_conf_path"
     echo -e "    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> "$nginx_domain_conf_path"
 
-    # Wordpress 静态文件缓存：                    location ~* .(jpg|jpeg|png|gif|ico|css|js)$ {
+    # Wordpress 静态文件缓存：                    location ~* .(jpeg|png|gif|ico|css|js)$ {
     echo -e "}\n# Wordpress 静态文件缓存：\n location ~* ^/wp-content/uploads/.*\.(jpg|jpeg|png|gif|ico|css|js)$ {" >> "$nginx_domain_conf_path"
     echo -e "      expires 365d;" >> "$nginx_domain_conf_path"
     echo -e "    }" >> "$nginx_domain_conf_path"
