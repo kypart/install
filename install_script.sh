@@ -1,5 +1,8 @@
 #!/bin/bash
 # Define colors for highlighting
+
+# 兔哥 脚本 https://github.com/uuzi2024/install_script.sh/blob/main/install_script.sh
+
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
