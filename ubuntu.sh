@@ -6,6 +6,8 @@ export DEBIAN_FRONTEND=noninteractive
 # 更新软件包列表
 apt update
 
+apt install vim curl -y
+
 # 升级已安装的软件包
 apt -y upgrade
 
