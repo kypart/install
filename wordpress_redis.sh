@@ -72,7 +72,6 @@ define('WP_REDIS_CONFIG', [ \\
     'maxttl' => 86400 * 7, \\
     'timeout' => 1.0, \\
     'retry_interval' => 100, \\
-    'serializer' => 'igbinary', \\
     'retries' => 3, \\
     'backoff' => 'smart', \\
     'async_flush' => true, \\
@@ -95,9 +94,6 @@ echo "# 修改 PHP 配置文件"
 PHP_INI=$(php -r "echo php_ini_loaded_file();")
 
 echo "# 将扩展添加到 php.ini 文件中，如果已经存在则不添加"
-if ! grep -q "extension=igbinary.so" "$PHP_INI"; then
-    sed -i '/^\[PHP\]/a extension=igbinary.so' $PHP_INI
-fi
 if ! grep -q "extension=redis.so" "$PHP_INI"; then
     sed -i '/^\[PHP\]/a extension=redis.so' $PHP_INI
 fi
