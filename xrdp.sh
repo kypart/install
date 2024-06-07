@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# 卸载旧版本的软件（以xrdp和桌面系统为例）
+sudo apt-get remove --purge xrdp -y
+sudo apt-get remove --purge ubuntu-desktop -y
+
+# 清理缓存
+sudo apt-get autoremove -y
+sudo apt-get clean
+
+# 删除xrdp残留文件
+sudo rm -rf /etc/xrdp
+sudo rm -rf /var/log/xrdp
+sudo rm -rf /usr/share/xrdp
+
 # 更新服务器并安装Ubuntu桌面系统
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install tasksel -y
