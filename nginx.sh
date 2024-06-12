@@ -160,10 +160,10 @@ function addDomainPort() {
     echo -e "    proxy_set_header X-Real-IP \$remote_addr;" >> "$nginx_domain_conf_path"
     echo -e "    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> "$nginx_domain_conf_path"
 
-    # Wordpress 静态文件缓存：                    location ~* .(jpeg|png|gif|ico|css|js)$ {
-    echo -e "}\n# Wordpress 静态文件缓存：\n location ~* ^/wp-content/uploads/.*\.(jpeg|png|gif|ico|css|js)$ {" >> "$nginx_domain_conf_path"
-    echo -e "      expires 365d;" >> "$nginx_domain_conf_path"
-    echo -e "    }" >> "$nginx_domain_conf_path"
+    # Wordpress 静态文件缓存：                    location ~* .(jpg|jpeg|png|gif|ico|css|js)$ {
+#    echo -e "}\n# Wordpress 静态文件缓存：\n location ~* ^/wp-content/uploads/.*\.(jpg|jpeg|png|gif|ico|css|js)$ {" >> "$nginx_domain_conf_path"
+#    echo -e "      expires 365d;" >> "$nginx_domain_conf_path"
+#    echo -e "    }" >> "$nginx_domain_conf_path"
 
     # 防止爬虫抓取 防止爬虫抓取可能会对网站的SEO产生一定的影响，具体取决于你选择的实现方式和执行策略
     echo -e "# 防止爬虫抓取 \n if (\$http_user_agent ~* \"360Spider|JikeSpider|Spider|spider|bot|Bot|2345Explorer|curl|wget|webZIP|qihoobot|Baiduspider|Googlebot|Googlebot-Mobile|Googlebot-Image|Mediapartners-Google|Adsbot-Google|Feedfetcher-Google|Yahoo! Slurp|Yahoo! Slurp China|YoudaoBot|Sosospider|Sogou spider|Sogou web spider|MSNBot|ia_archiver|Tomato Bot|NSPlayer|bingbot\") {" >> "$nginx_domain_conf_path"
@@ -194,7 +194,7 @@ function deleteDomainPort() {
 
         # 检查是否找到匹配的内容
         if [[ -n "$line_number" ]]; then
-            # 删除匹配的整个 server 块（包括匹配域名的一行，上2行和下17行）
+            # 删除匹配的整个 server 块（包括匹配域名的一行，上2行和下8行）
             awk -v start=$((line_number-2)) -v end=$((line_number+17)) 'NR<start || NR>end' "$nginx_domain_conf_path" > temp_config && mv temp_config "$nginx_domain_conf_path"
             restartNginx
             Echo_Red "域名和端口已成功删除。"
