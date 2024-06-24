@@ -44,7 +44,7 @@ cd $DIR_NAME
 
 echo "# 编译和安装 Redis 扩展"
 phpize
-./configure --enable-redis-igbinary
+./configure
 make
 make install
 
