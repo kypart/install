@@ -3,6 +3,7 @@
 # 卸载旧版本的软件（以xrdp和桌面系统为例）
 sudo apt-get remove --purge xrdp -y
 sudo apt-get remove --purge ubuntu-desktop -y
+sudo apt-get remove --purge kubuntu-desktop -y
 
 # 清理缓存
 sudo apt-get autoremove -y
@@ -16,7 +17,7 @@ sudo rm -rf /usr/share/xrdp
 # 更新服务器并安装Ubuntu桌面系统
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install tasksel -y
-sudo tasksel install ubuntu-desktop
+sudo tasksel install kubuntu-desktop -y
 
 # 安装并启用xrdp服务
 sudo apt-get install xrdp -y
