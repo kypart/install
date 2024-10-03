@@ -39,7 +39,7 @@ sudo rm /usr/bin/docker-compose
 echo "Docker 和 Docker Compose 已成功删除。"
 
 # 更新包索引并安装依赖项
-echo "开始安装 Docker 和 Docker Compose..."
+echo "开始安装 Docker 26.1.3 和 Docker Compose..."
 
 if [ "$OS" == "ubuntu" ]; then
     sudo apt update
@@ -56,10 +56,17 @@ if [ "$OS" == "ubuntu" ]; then
       "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
       $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt update
-    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+    # 安装指定版本的 Docker 26.1.3
+    sudo apt install -y docker-ce=5:26.1.3~3-0~ubuntu-$(lsb_release -cs) \
+                        docker-ce-cli=5:26.1.3~3-0~ubuntu-$(lsb_release -cs) \
+                        containerd.io docker-buildx-plugin docker-compose-plugin
+
 elif [ "$OS" == "centos" ]; then
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+    # 安装指定版本的 Docker 26.1.3
+    sudo yum install -y docker-ce-26.1.3 docker-ce-cli-26.1.3 containerd.io docker-buildx-plugin docker-compose-plugin
 fi
 
 # 启动 Docker 并设置开机自启动
@@ -82,4 +89,4 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 # 验证 Docker Compose 安装
 docker-compose --version
 
-echo "Docker 和 Docker Compose 已成功安装。"
+echo "Docker 26.1.3 和 Docker Compose 已成功安装。"
