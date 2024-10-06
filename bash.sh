@@ -17,6 +17,7 @@ urls=(
     "https://raw.githubusercontent.com/localpoliy/install/local/nginx.sh Nginx_脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/firewall.sh 防火墙脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/docker.sh docker安装脚本"
+    "https://raw.githubusercontent.com/localpoliy/install/local/sudoers.sh ubuntu免密码sudo"
 #   "https://raw.githubusercontent.com/localpoliy/install/local/iptablesUtils.sh iptables_脚本"
 #   "https://raw.githubusercontent.com/localpoliy/install/local/install_script.sh 兔哥一键脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/wordpress_redis.sh WordPress_Redis_脚本"
