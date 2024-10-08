@@ -6,34 +6,34 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# 确定 sudoers 文件路径和需要添加的条目
-sudoers_file="/etc/sudoers"
-sudoers_entry="ALL ALL=(ALL:ALL) NOPASSWD: /usr/bin/sudo -i"
+# 确定 sudoers.d 目录路径和需要添加的文件名
+sudoers_d_dir="/etc/sudoers.d"
+sudoers_file="$sudoers_d_dir/nopasswd_sudo_i"
+sudoers_entry="ALL ALL=(ALL) NOPASSWD: /usr/bin/sudo -i"
 
-# 检查 sudoers 文件是否已经包含所需条目
+# 检查 sudoers.d 目录是否存在
+if [ ! -d "$sudoers_d_dir" ]; then
+  echo "sudoers.d 目录不存在，创建目录..."
+  mkdir "$sudoers_d_dir"
+fi
+
+# 检查配置文件是否已经包含所需条目
 if grep -Fxq "$sudoers_entry" "$sudoers_file"; then
-  echo "sudoers 文件中已存在免密码 sudo -i 的配置。"
+  echo "sudoers.d 文件中已存在免密码 sudo -i 的配置。"
 else
-  # 创建一个备份
-  cp "$sudoers_file" "$sudoers_file.bak"
+  # 创建或追加免密配置
+  echo "$sudoers_entry" > "$sudoers_file"
 
-  # 使用临时文件编辑 sudoers
-  tmp_sudoers=$(mktemp)
-  cp "$sudoers_file" "$tmp_sudoers"
-
-  # 添加免密行
-  echo "$sudoers_entry" >> "$tmp_sudoers"
+  # 确保权限为 0440
+  chmod 0440 "$sudoers_file"
 
   # 使用 visudo 检查语法
-  visudo -c -f "$tmp_sudoers"
+  visudo -c -f "$sudoers_file"
   if [ $? -eq 0 ]; then
-    # 如果没有语法错误，将临时文件替换掉原文件
-    cp "$tmp_sudoers" "$sudoers_file"
-    echo "sudoers 文件修改成功！"
+    echo "sudoers.d 文件修改成功，免密码 sudo -i 配置已生效！"
   else
     echo "sudoers 文件语法错误，修改失败。"
+    # 如果检查失败，删除文件以避免问题
+    rm "$sudoers_file"
   fi
-
-  # 删除临时文件
-  rm "$tmp_sudoers"
 fi
