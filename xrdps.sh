@@ -11,34 +11,42 @@ check_kubuntu() {
     fi
 }
 
-# 安装 Kubuntu 桌面系统并配置 XRDP
+# 更新服务器并安装 GNOME 桌面和 Dolphin 文件管理器
 install_kubuntu() {
-    echo "更新服务器并安装 GNOME 桌面和 Dolphin 文件管理器..."
     sudo apt-get update && sudo apt-get upgrade -y
     sudo apt install tasksel -y
     sudo apt install dolphin -y
-    
-    echo "安装 Kubuntu 桌面..."
     sudo apt-get install kubuntu-desktop -y
 
-    echo "安装并开启 XRDP 服务..."
+    # 安装并开启 XRDP 服务
     sudo apt install xrdp -y
     sudo systemctl enable xrdp
 
-    echo "添加 2525 端口到防火墙规则..."
+    # 配置 XRDP：启用高效编码、设置TCP
+    sudo sed -i '/\[globals\]/a bitmap_compression=yes\nbulk_compression=yes\nuse_compression=yes\ntls_ciphers=HIGH' /etc/xrdp/xrdp.ini
+    sudo sed -i '/\[globals\]/a h264=yes\nh264_codec=yes\nrfx_codec=yes\njpeg_codec=yes\nx264=yes\nmax_bpp=16\nmax_sessions=1\ntcp_nodelay=yes' /etc/xrdp/xrdp.ini
+
+    # 添加2525端口并保存防火墙规则
     sudo iptables -I INPUT -p tcp --dport 2525 -j ACCEPT
     sudo netfilter-persistent save
 
-    echo "修改 xrdp 配置文件..."
-    sudo sed -i 's/port=3389/port=2525/' /etc/xrdp/xrdp.ini
-    sudo sed -i '/\[Globals\]/a tcp_send_buffer_bytes=4194304\ntcp_recv_buffer_bytes=6291456\nmax_sessions=1' /etc/xrdp/xrdp.ini
-
-    echo "调整内核 TCP 缓存大小..."
+    # 调整网络缓冲区
     sudo sysctl -w net.core.rmem_max=12582912
     sudo sysctl -w net.core.wmem_max=8388608
+    sudo sysctl -w net.core.rmem_default=1048576
+    sudo sysctl -w net.core.wmem_default=1048576
+    sudo sysctl -w net.ipv4.tcp_rmem='4096 87380 16777216'
+    sudo sysctl -w net.ipv4.tcp_wmem='4096 65536 16777216'
+    sudo sysctl -w net.ipv4.tcp_window_scaling=1
     sudo sysctl -p
 
-    echo "安装完成，重启服务器..."
+    # 修改xrdp端口为2525
+    sudo sed -i 's/port=3389/port=2525/' /etc/xrdp/xrdp.ini
+
+    # 禁用 KDE 桌面的合成功能以提高速度
+    kwriteconfig5 --file kwinrc --group Compositing --key Enabled false
+
+    # 安装完成后重启
     sudo reboot
 }
 
