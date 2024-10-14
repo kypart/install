@@ -106,4 +106,4 @@ sed -i 's/^;\?\(max_execution_time\).*/\1 = 600/g' $PHP_INI
 sed -i 's/^;\?\(max_input_time\).*/\1 = 600/g' $PHP_INI
 sed -i 's/^;\?\(max_input_vars\).*/\1 = 5000/g' $PHP_INI
 
-echo "WordPress 容器内的脚本执行完成。"
+echo "WordPress 容器内的脚本执行完成。需要重启容器否则无法修改！"
