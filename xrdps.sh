@@ -50,6 +50,22 @@ install_kubuntu() {
     sudo reboot
 }
 
+# 安装中文语言包
+install_chinese_language() {
+    echo "开始安装中文语言包..."
+    sudo apt-get install -y language-pack-zh-han*
+    sudo apt install -y $(check-language-support)
+
+    echo "更新 locale 配置文件..."
+    sudo sed -i 's/^LANG=.*/LANG="zh_CN.UTF-8"/' /etc/default/locale
+    sudo sed -i 's/^LANGUAGE=.*/LANGUAGE="zh_CN:zh"/' /etc/default/locale
+
+    echo "更新环境变量配置..."
+    sudo bash -c 'echo -e "\nLANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh\"\nLC_NUMERIC=\"zh_CN\"\nLC_TIME=\"zh_CN\"\nLC_MONETARY=\"zh_CN\"\nLC_PAPER=\"zh_CN\"\nLC_NAME=\"zh_CN\"\nLC_ADDRESS=\"zh_CN\"\nLC_TELEPHONE=\"zh_CN\"\nLC_MEASUREMENT=\"zh_CN\"\nLC_IDENTIFICATION=\"zh_CN\"\nLC_ALL=\"zh_CN.UTF-8\"" >> /etc/environment'
+
+    echo "语言包安装完成，请重新登录以应用更改。"
+}
+
 # 修复 Kubuntu 桌面环境
 repair_desktop() {
     echo "关闭并重新启动 Plasmashell..."
@@ -68,23 +84,27 @@ main_menu() {
     while true; do
         echo "请选择一个操作："
         echo "1) 检测并安装 Kubuntu 桌面"
-        echo "2) 修复 Kubuntu 桌面"
-        echo "3) 退出"
-        read -p "请输入你的选择 (1, 2, 3): " choice
+        echo "2) 安装中文语言包"
+        echo "3) 修复 Kubuntu 桌面"
+        echo "4) 退出"
+        read -p "请输入你的选择 (1, 2, 3, 4): " choice
 
         case $choice in
             1)
                 check_kubuntu
                 ;;
             2)
-                repair_desktop
+                install_chinese_language
                 ;;
             3)
+                repair_desktop
+                ;;
+            4)
                 echo "退出脚本"
                 exit 0
                 ;;
             *)
-                echo "无效选择，请输入 1, 2, 或 3."
+                echo "无效选择，请输入 1, 2, 3, 或 4."
                 ;;
         esac
     done
