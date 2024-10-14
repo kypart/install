@@ -56,6 +56,9 @@ add_port() {
     read -p "请输入要添加的端口号：" port
     sudo firewall-cmd --zone=public --add-port="${port}/tcp" --permanent
     sudo firewall-cmd --zone=public --add-port="${port}/udp" --permanent
+    
+    sudo firewall-cmd --zone=docker --add-port="${port}/tcp" --permanent
+    sudo firewall-cmd --zone=docker --add-port="${port}/udp" --permanent
     sudo firewall-cmd --reload
     echo "端口$port已添加"
 }
@@ -65,6 +68,9 @@ delete_port() {
     read -p "请输入要删除的端口号：" port
     sudo firewall-cmd --zone=public --remove-port="${port}/tcp" --permanent
     sudo firewall-cmd --zone=public --remove-port="${port}/udp" --permanent
+    
+    sudo firewall-cmd --zone=docker --remove-port="${port}/tcp" --permanent
+    sudo firewall-cmd --zone=docker --remove-port="${port}/udp" --permanent
     sudo firewall-cmd --reload
     echo "端口$port已删除"
 }
