@@ -57,8 +57,6 @@ add_port() {
     sudo firewall-cmd --zone=public --add-port="${port}/tcp" --permanent
     sudo firewall-cmd --zone=public --add-port="${port}/udp" --permanent
     
-    sudo firewall-cmd --zone=docker --add-port="${port}/tcp" --permanent
-    sudo firewall-cmd --zone=docker --add-port="${port}/udp" --permanent
     sudo firewall-cmd --reload
     echo "端口$port已添加"
 }
@@ -69,8 +67,6 @@ delete_port() {
     sudo firewall-cmd --zone=public --remove-port="${port}/tcp" --permanent
     sudo firewall-cmd --zone=public --remove-port="${port}/udp" --permanent
     
-    sudo firewall-cmd --zone=docker --remove-port="${port}/tcp" --permanent
-    sudo firewall-cmd --zone=docker --remove-port="${port}/udp" --permanent
     sudo firewall-cmd --reload
     echo "端口$port已删除"
 }
