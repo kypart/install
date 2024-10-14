@@ -5,6 +5,8 @@ LIGHT_GREEN='\033[1;32m'
 LIGHT_RED='\033[1;31m'
 NO_COLOR='\033[0m'
 
+#  默认区 public  但是docker 区不在管理中
+
 # 检查和安装 firewall
 check_and_install_firewalld() {
     if ! systemctl list-units --type=service | grep -q firewalld.service; then
