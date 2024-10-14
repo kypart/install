@@ -64,6 +64,9 @@ install_chinese_language() {
     sudo bash -c 'echo -e "\nLANG=\"zh_CN.UTF-8\"\nLANGUAGE=\"zh_CN:zh\"\nLC_NUMERIC=\"zh_CN\"\nLC_TIME=\"zh_CN\"\nLC_MONETARY=\"zh_CN\"\nLC_PAPER=\"zh_CN\"\nLC_NAME=\"zh_CN\"\nLC_ADDRESS=\"zh_CN\"\nLC_TELEPHONE=\"zh_CN\"\nLC_MEASUREMENT=\"zh_CN\"\nLC_IDENTIFICATION=\"zh_CN\"\nLC_ALL=\"zh_CN.UTF-8\"" >> /etc/environment'
 
     echo "语言包安装完成，请重新登录以应用更改。"
+    
+    # 安装完成后重启
+    sudo reboot
 }
 
 # 修复 Kubuntu 桌面环境
