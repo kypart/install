@@ -82,6 +82,51 @@ repair_desktop() {
     sudo reboot
 }
 
+# 重新安装 Ubuntu 20.04
+reinstall_ubuntu_20_04() {
+    echo "你确定要重新安装 Ubuntu 20.04 吗？这将会删除现有的数据！（默认密码：AnuBiC_s6）"
+    read -p "请输入 'yes' 或 'y' 来确认: " confirmation
+    if [[ "$confirmation" == "yes" || "$confirmation" == "y" ]]; then
+        echo "更新需要的软件 Ubuntu 20.04..."
+        sudo apt update -y && apt install -y curl && apt install -y socat && apt install wget -y xz-utils openssl gawk file
+        bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/MoeClub/Note/master/InstallNET.sh') -u 20.04 -v 64 -p "AnuBiC_s6"
+    else
+        echo "重新安装已取消。"
+    fi
+}
+
+# 升级到 Ubuntu 22.04
+upgrade_to_ubuntu_22_04() {
+    echo "升级到 Ubuntu 22.04..."
+    sudo sed -i 's/focal/jammy/g' /etc/apt/sources.list
+    sudo sed -i 's/focal/jammy/g' /etc/apt/sources.list.d/*.list
+    sudo apt update
+    sudo apt upgrade -y
+    sudo apt dist-upgrade -y
+    sudo apt autoclean
+    sudo apt autoremove -y
+    sudo reboot
+}
+
+# 更换为 163 源
+change_to_163_mirrors() {
+    echo "更换为 163 源..."
+    sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
+    sudo bash -c "cat << EOF > /etc/apt/sources.list
+deb http://mirrors.163.com/ubuntu/ jammy main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ jammy-security main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ jammy-proposed main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ jammy-backports main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ jammy main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ jammy-security main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ jammy-proposed main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ jammy-backports main restricted universe multiverse
+EOF"
+    sudo apt update
+}
+
 # 主菜单函数
 main_menu() {
     while true; do
@@ -89,8 +134,11 @@ main_menu() {
         echo "1) 检测并安装 Kubuntu 桌面"
         echo "2) 安装中文语言包"
         echo "3) 修复 Kubuntu 桌面"
-        echo "4) 退出"
-        read -p "请输入你的选择 (1, 2, 3, 4): " choice
+        echo "4) 重新安装 Ubuntu 20.04"
+        echo "5) 升级到 Ubuntu 22.04"
+        echo "6) 更换为 163 源"
+        echo "7) 退出"
+        read -p "请输入你的选择 (1-7): " choice
 
         case $choice in
             1)
@@ -103,11 +151,20 @@ main_menu() {
                 repair_desktop
                 ;;
             4)
+                reinstall_ubuntu_20_04
+                ;;
+            5)
+                upgrade_to_ubuntu_22_04
+                ;;
+            6)
+                change_to_163_mirrors
+                ;;
+            7)
                 echo "退出脚本"
                 exit 0
                 ;;
             *)
-                echo "无效选择，请输入 1, 2, 3, 或 4."
+                echo "无效选择，请输入 1-7."
                 ;;
         esac
     done
