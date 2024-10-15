@@ -98,11 +98,21 @@ reinstall_ubuntu_20_04() {
 # 升级到 Ubuntu 22.04
 upgrade_to_ubuntu_22_04() {
     echo "升级到 Ubuntu 22.04..."
+    #首先需要更新你当前的系统
+    sudo apt update
+    sudo apt upgrade -y
+    sudo apt dist-upgrade -y
+    sudo apt autoclean
+    sudo apt autoremove -y
+    
+    #首先更新 apt 源，替换 focal 为 jammy：
     sudo sed -i 's/focal/jammy/g' /etc/apt/sources.list
     sudo sed -i 's/focal/jammy/g' /etc/apt/sources.list.d/*.list
     sudo apt update
     sudo apt upgrade -y
     sudo apt dist-upgrade -y
+    
+    #更新后删除不必要的软件和依赖：
     sudo apt autoclean
     sudo apt autoremove -y
     sudo reboot
