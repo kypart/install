@@ -106,28 +106,43 @@ reinstall_ubuntu_20_04() {
     fi
 }
 
-# 升级到 Ubuntu 22.04
 upgrade_to_ubuntu_22_04() {
+    # 获取当前系统版本
+    current_version=$(lsb_release -rs)
+    
+    # 检查系统是否已经是 22.04
+    if [[ "$current_version" == "22.04" ]]; then
+        echo "当前系统已是 Ubuntu 22.04，跳过升级。"
+        echo "当前系统版本：$current_version"
+        return
+    fi
+
     echo "升级到 Ubuntu 22.04..."
-    #首先需要更新你当前的系统
+    
+    # 更新当前系统
     sudo apt update
     sudo apt upgrade -y
     sudo apt dist-upgrade -y
     sudo apt autoclean
     sudo apt autoremove -y
     
-    #首先更新 apt 源，替换 focal 为 jammy：
+    # 更新 apt 源，替换 focal 为 jammy
     sudo sed -i 's/focal/jammy/g' /etc/apt/sources.list
     sudo sed -i 's/focal/jammy/g' /etc/apt/sources.list.d/*.list
+    
+    # 再次更新并升级
     sudo apt update
     sudo apt upgrade -y
     sudo apt dist-upgrade -y
     
-    #更新后删除不必要的软件和依赖：
+    # 清理不必要的软件和依赖
     sudo apt autoclean
     sudo apt autoremove -y
+    
+    # 重启系统
     sudo reboot
 }
+
 
 # 更换为 163 源
 change_to_163_mirrors() {
