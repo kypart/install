@@ -57,22 +57,18 @@ install_chinese_language() {
     sudo apt install -y $(check-language-support)
 
     echo "更新 locale 配置文件..."
-    sudo sed -i 's/^LANG=.*/LANG="zh_CN.UTF-8"/' /etc/default/locale
-    sudo sed -i 's/^LANGUAGE=.*/LANGUAGE="zh_CN:zh"/' /etc/default/locale
 
-# 添加额外的配置
-sudo tee -a /etc/default/locale > /dev/null <<EOL
-LC_NUMERIC="zh_CN"
-LC_TIME="zh_CN"
-LC_MONETARY="zh_CN"
-LC_PAPER="zh_CN"
-LC_NAME="zh_CN"
-LC_ADDRESS="zh_CN"
-LC_TELEPHONE="zh_CN"
-LC_MEASUREMENT="zh_CN"
-LC_IDENTIFICATION="zh_CN"
-LC_ALL="zh_CN.UTF-8"
-EOL
+    # 修改 LANG 和 LANGUAGE 的值
+    sudo sed -i 's/^LANG=.*/LANG="zh_CN.UTF-8"/' /etc/default/locale || echo 'LANG="zh_CN.UTF-8"' | sudo tee -a /etc/default/locale
+    sudo sed -i 's/^LANGUAGE=.*/LANGUAGE="zh_CN:zh"/' /etc/default/locale || echo 'LANGUAGE="zh_CN:zh"' | sudo tee -a /etc/default/locale
+
+    # 添加其他变量
+    for var in LC_NUMERIC LC_TIME LC_MONETARY LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION LC_ALL; do
+      sudo sed -i "s/^$var=.*/$var=\"zh_CN\"/" /etc/default/locale || echo "$var=\"zh_CN\"" | sudo tee -a /etc/default/locale
+    done
+
+    # 为 LC_ALL 变量设定 UTF-8
+    sudo sed -i 's/^LC_ALL=.*/LC_ALL="zh_CN.UTF-8"/' /etc/default/locale || echo 'LC_ALL="zh_CN.UTF-8"' | sudo tee -a /etc/default/locale
 
 
     echo "更新环境变量配置..."
