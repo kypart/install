@@ -37,7 +37,7 @@ function checkNginx() {
 function installNginx() {
     if ! command -v nginx &> /dev/null; then
         Echo_Red "安装 Nginx..."
-        sudo apt-get update && sudo apt-get install -y nginx
+        sudo apt-get update && sudo apt-get install -y nginx npm
 
         # 检查是否有gzip配置
         if grep -q "gzip on;" $nginx_main_conf_path; then
@@ -59,7 +59,7 @@ function installNginx() {
 function uninstallNginx() {
     if command -v nginx &> /dev/null; then
         Echo_Red "卸载 Nginx..."
-        sudo apt-get remove --purge -y nginx nginx-common nginx-core
+        sudo apt-get remove --purge -y nginx nginx-common nginx-core npm
         sudo apt-get autoremove -y
         sudo rm -rf /etc/nginx/
         Echo_Red "Nginx 已卸载并清除相关文件。"
