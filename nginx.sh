@@ -38,8 +38,33 @@ function installNginx() {
     if ! command -v nginx &> /dev/null; then
         Echo_Red "安装 Nginx..."
         sudo apt-get update && sudo apt-get install -y nginx npm
+        sleep 2
+        # 2. 检测并安装/更新 PM2
+        echo "检查 PM2 是否安装..."
+        if command_exists pm2; then
+            echo "PM2 已安装，正在更新 PM2..."
+            sudo npm install -g pm2
+        else
+            echo "PM2 未安装，正在安装 PM2..."
+            sudo npm install -g pm2
+        fi
 
-        # 检查是否有gzip配置
+        # 确保 PM2 安装或更新成功
+        if ! command_exists pm2; then
+            echo "PM2 安装或更新失败，请检查 npm 配置。"
+        fi
+
+        # 3. 禁用 PM2 的自动启动功能
+        echo "禁用 PM2 的自动启动功能..."
+        pm2 unstartup
+
+        # 4. 停止所有 PM2 进程
+        echo "停止所有 PM2 进程..."
+        pm2 stop all
+        pm2 delete all
+
+
+        # 检查是否有gzip配置   配置 ngxin config.conf
         if grep -q "gzip on;" $nginx_main_conf_path; then
             # 在gzip on;行之后添加gzip配置            client_max_body_size 500m;
            # sudo sed -i '/gzip on;/a \\tclient_max_body_size 500m;\n\gzip_buffers 16 8k;\n\tgzip_comp_level 6;\n\tgzip_http_version 1.1;\n\tgzip_min_length 256;\n\tgzip_proxied any;\n\tgzip_vary on;\n\tgzip_types text/xml application/xml application/atom+xml application/rss+xml application/xhtml+xml image/svg+xml text/javascript application/javascript application/x-javascript text/x-json application/json application/x-web-app-manifest+json text/css text/plain text/x-component font/opentype font/ttf application/x-font-ttf application/vnd.ms-fontobject image/x-icon;\n\tgzip_disable "MSIE [1-6]\\.(?!.*SV1)";' $nginx_main_conf_path
