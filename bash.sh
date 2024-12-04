@@ -14,11 +14,11 @@ urls=(
    #  "https://git.io/hysteria.sh hysteria脚本"
     "https://git.io/oneclick  trojan_v2ray脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/bbr.sh BBR_脚本"
+    "https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sb.sh 一键四协议"
     "https://raw.githubusercontent.com/localpoliy/install/local/nginx.sh Nginx_脚本"
+    "https://raw.githubusercontent.com/localpoliy/install/local/xrdps.sh Kubuntu桌面"
     "https://raw.githubusercontent.com/localpoliy/install/local/firewall.sh 防火墙脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/docker.sh docker安装脚本"
-    "https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sb.sh 甬哥侃侃四协议"
-    "https://raw.githubusercontent.com/localpoliy/install/local/xrdps.sh Kubuntu桌面"
     "https://raw.githubusercontent.com/localpoliy/install/local/wordpress_redis.sh WordPress_Redis_脚本"
     "退出脚本"
 )
