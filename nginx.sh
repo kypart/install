@@ -201,6 +201,8 @@ function addDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
+
+# 删除指定域名的服务器块
 function deleteDomainPort() {
     # 检查配置文件是否存在
     [ ! -f "$nginx_domain_conf_path" ] && { 
@@ -227,7 +229,7 @@ function deleteDomainPort() {
         if [[ -n "$line_number" ]]; then
             # 获取开始和结束行的行号（这里假设删除指定域名的上2行和下8行）
             start=$((line_number - 2))  # 删除之前的两行（如 listen 和 server_name）
-            end=$((line_number + 8))    # 删除之后的 8 行（包括可能的 location 配置）
+            end=$((line_number + 15))    # 删除之后的 8 行（包括可能的 location 配置）
 
             # 使用 awk 删除指定范围的行
             awk -v start="$start" -v end="$end" 'NR < start || NR > end' "$nginx_domain_conf_path" > temp_config && mv temp_config "$nginx_domain_conf_path"
@@ -244,37 +246,6 @@ function deleteDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
-
-
-# 删除指定域名的服务器块
-function deleteDomainPort2() {
-    [ ! -f "$nginx_domain_conf_path" ] && { Echo_Red "配置文件不存在：$nginx_domain_conf_path"; read -n 1 -s -r -p "按任意键继续..."; return; }
-
-    viewNginxConfig
-
-    echo
-    Echo_Red "请输入要删除的域名（例如：example.com），或输入 'c' 取消:"
-    read -r domain_name
-
-    # 检查是否输入 'c' 取消
-    if [[ "$domain_name" == "c" ]]; then
-        Echo_Red "取消删除，未做任何改变。"
-    else
-        # 获取匹配域名的行号
-        line_number=$(awk -v domain="$domain_name" '$0 ~ ("server_name " domain ";") {print NR}' "$nginx_domain_conf_path")
-
-        # 检查是否找到匹配的内容
-        if [[ -n "$line_number" ]]; then
-            # 删除匹配的整个 server 块（包括匹配域名的一行，上2行和下8行）
-            awk -v start=$((line_number-2)) -v end=$((line_number+17)) 'NR<start || NR>end' "$nginx_domain_conf_path" > temp_config && mv temp_config "$nginx_domain_conf_path"
-            restartNginx
-            Echo_Red "域名和端口已成功删除。"
-        else
-            Echo_Red "找不到对应行，未做任何改变。"
-        fi
-    fi
-    read -n 1 -s -r -p "按任意键继续..."
-}
 
 # 重启Nginx
 function restartNginx() {
