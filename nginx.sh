@@ -209,7 +209,7 @@ function addDomainPort() {
     echo -e "    }" >> "$nginx_domain_conf_path"
     
     # 防止爬虫抓取 防止爬虫抓取可能会对网站的SEO产生一定的影响，具体取决于你选择的实现方式和执行策略
-    # echo -e " if (\$http_user_agent ~* \"360Spider|JikeSpider|Spider|spider|bot|Bot|2345Explorer|curl|wget|webZIP|qihoobot|Baiduspider|Googlebot|Googlebot-Mobile|Googlebot-Image|Mediapartners-Google|Adsbot-Google|Feedfetcher-Google|Yahoo! Slurp|Yahoo! Slurp China|YoudaoBot|Sosospider|Sogou spider|Sogou web spider|MSNBot|ia_archiver|Tomato Bot|NSPlayer|bingbot\") {" >> "$nginx_domain_conf_path"
+    echo -e " if (\$http_user_agent ~* \"360Spider|JikeSpider|Spider|spider|bot|Bot|2345Explorer|curl|wget|webZIP|qihoobot|Baiduspider|Googlebot|Googlebot-Mobile|Googlebot-Image|Mediapartners-Google|Adsbot-Google|Feedfetcher-Google|Yahoo! Slurp|Yahoo! Slurp China|YoudaoBot|Sosospider|Sogou spider|Sogou web spider|MSNBot|ia_archiver|Tomato Bot|NSPlayer|bingbot\") {" >> "$nginx_domain_conf_path"
     echo -e "      return 403;" >> "$nginx_domain_conf_path"
 
     echo -e "  }\n}" >> "$nginx_domain_conf_path"
