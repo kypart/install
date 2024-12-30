@@ -127,6 +127,15 @@ function manageNginx() {
     manageNginx
 }
 
+function checkDomainExists() {
+    local domain="$1"  # 从函数参数中获取域名
+    # 检查配置文件中是否包含指定的域名
+    if ! grep -q "server_name $domain;" "$nginx_domain_conf_path"; then
+        return 1  # 返回 1 表示未找到该域名
+    fi
+    return 0  # 返回 0 表示域名存在
+}
+
 # 查看Nginx配置文件中的域名和端口
 function viewNginxConfig() {
     if [ ! -f "$nginx_domain_conf_path" ]; then
@@ -165,6 +174,14 @@ function addDomainPort() {
     Echo_Red "请输入端口号："
     read -r port
 
+
+    # 检查域名是否在配置文件中
+    checkDomainExists "$domain"
+    if [[ $? -ne 1 ]]; then  # 如果返回值不为0（表示没有找到域名），则退出
+       Echo_Red "已经有该域名配置！"
+        return
+    fi
+  
     # 验证域名和端口
     if ! [[ "$domain" =~ ^[a-zA-Z0-9.-]+$ ]]; then
         Echo_Red "域名格式无效。"
