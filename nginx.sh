@@ -201,56 +201,46 @@ function addDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
-
-function deleteDomainPort() {
+function deleteDomainPort2() {
+    # 检查配置文件是否存在
     [ ! -f "$nginx_domain_conf_path" ] && { 
         Echo_Red "配置文件不存在：$nginx_domain_conf_path"; 
         read -n 1 -s -r -p "按任意键继续..."; 
         return; 
     }
 
+    # 查看当前的 Nginx 配置
     viewNginxConfig
 
     echo
     Echo_Red "请输入要删除的域名（例如：example.com），或输入 'c' 取消:"
     read -r domain_name
 
-    # 检查是否输入 'c' 取消
+    # 如果输入 'c' 则取消删除操作
     if [[ "$domain_name" == "c" ]]; then
         Echo_Red "取消删除，未做任何改变。"
     else
-        # 使用 awk 删除指定 domain_name 的 server 块
-        awk -v domain="$domain_name" '
-        BEGIN {
-            in_block = 0;
-        }
-        # 检测到包含 server_name 的行，标记为进入删除块
-        /server_name[[:space:]]+/ && $0 ~ domain { 
-            in_block = 1; 
-        }
-        # 检测到 server 块的开始，标记为开始删除
-        in_block && /server[[:space:]]*\{/ { 
-            next;  # 跳过该行
-        }
-        # 检测到 server 块的结束，标记为结束删除
-        in_block && /\}/ { 
-            in_block = 0;
-            next;  # 跳过该行
-        }
-        # 如果不在删除的块内，则输出当前行
-        !in_block { print }
-        ' "$nginx_domain_conf_path" > temp_config
+        # 获取包含指定域名的 server_name 行的行号
+        line_number=$(awk -v domain="$domain_name" '$0 ~ ("server_name " domain ";") {print NR}' "$nginx_domain_conf_path")
 
-        # 检查操作结果并覆盖原文件
-        if [[ -s temp_config ]]; then
-            mv temp_config "$nginx_domain_conf_path"
+        # 检查是否找到匹配的内容
+        if [[ -n "$line_number" ]]; then
+            # 获取开始和结束行的行号（这里假设删除指定域名的上2行和下8行）
+            start=$((line_number - 2))  # 删除之前的两行（如 listen 和 server_name）
+            end=$((line_number + 8))    # 删除之后的 8 行（包括可能的 location 配置）
+
+            # 使用 awk 删除指定范围的行
+            awk -v start="$start" -v end="$end" 'NR < start || NR > end' "$nginx_domain_conf_path" > temp_config && mv temp_config "$nginx_domain_conf_path"
+
+            # 重启 Nginx 服务以应用修改
             restartNginx
-            Echo_Red "域名和服务器块已成功删除：$domain_name"
+
+            Echo_Red "域名和端口已成功删除：$domain_name"
         else
-            Echo_Red "删除失败，检查配置文件或域名是否存在。"
-            rm -f temp_config
+            Echo_Red "找不到对应域名的配置，未做任何改变。"
         fi
     fi
+
     read -n 1 -s -r -p "按任意键继续..."
 }
 
