@@ -201,7 +201,6 @@ function addDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
-
  function deleteDomainPort() {
     # 检查配置文件是否存在
     [ ! -f "$nginx_domain_conf_path" ] && { 
@@ -223,19 +222,20 @@ function addDomainPort() {
     else
         # 使用 awk 查找并删除包含指定域名的整个 server 块
         awk -v domain="$domain_name" '
-        # 当遇到包含 server_name 和指定域名的行时，删除整个 server 块
+        # 标记进入匹配块，找到 server_name 后开始删除
         $0 ~ ("server_name " domain ";") {
             in_block = 1;  # 标记开始删除
-            next;           # 跳过当前行
+            # 跳过当前的 server_name 行和前面两行 (server { 和 listen 80;)
+            next;           
         }
 
-        # 当在删除块内并且遇到 }，表示 server 块结束，退出删除模式
+        # 删除 server 块的结束部分，遇到 } 后停止删除
         in_block && $0 ~ /^}/ {
             in_block = 0;
             next;            # 跳过 }
         }
 
-        # 如果在块外，打印该行
+        # 只有不在删除的块内时，才打印当前行
         !in_block { print }
         ' "$nginx_domain_conf_path" > temp_config && mv temp_config "$nginx_domain_conf_path"
 
