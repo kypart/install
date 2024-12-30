@@ -18,7 +18,7 @@ urls=(
     "https://raw.githubusercontent.com/localpoliy/install/local/nginx.sh Nginx_脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/xrdps.sh Kubuntu桌面"
   #  "https://raw.githubusercontent.com/localpoliy/install/local/firewall.sh 防火墙脚本"
-    "https://raw.githubusercontent.com/localpoliy/install/local/docker.sh 删除 Docker 重新安装"
+    "https://raw.githubusercontent.com/localpoliy/install/local/docker.sh Docker_脚本"
     "https://raw.githubusercontent.com/localpoliy/install/local/wordpress_redis.sh WordPress_Redis_脚本"
     "退出脚本"
 )
