@@ -8,6 +8,51 @@ else
     echo "无法检测操作系统类型。"
     exit 1
 fi
+ 
+# 定义函数来确认用户的选择
+confirm_action() {
+    while true; do
+        read -p "输入 1 删除并停止所有docker容器重新安装，输入 2 退出脚本: " choice
+        case $choice in
+            1)
+                echo "开始删除..."
+                # 在这里添加进入容器的命令
+                break
+                ;;
+            2)
+                echo "等待一秒后退出脚本..."
+                sleep 1
+                exit 0
+                ;;
+            *)
+                echo "无效的选择，请重新输入。"
+                ;;
+        esac
+    done
+}
+
+# 调用函数确认用户的选择
+confirm_action
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # 清理和删除 Docker 和 Docker Compose
 echo "开始清理和删除现有的 Docker 和 Docker Compose..."
