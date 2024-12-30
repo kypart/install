@@ -202,8 +202,7 @@ function addDomainPort() {
 }
 
 
-
- function deleteDomainPort() {
+function deleteDomainPort() {
     # 检查配置文件是否存在
     [ ! -f "$nginx_domain_conf_path" ] && { 
         Echo_Red "配置文件不存在：$nginx_domain_conf_path"; 
@@ -215,7 +214,7 @@ function addDomainPort() {
     viewNginxConfig
 
     echo
-    Echo_Red "请输入要删除的域名（例如：www.domain.com），或输入 'c' 取消:"
+    Echo_Red "请输入要删除的域名（例如：www.fiyma.com），或输入 'c' 取消:"
     read -r domain_name
 
     # 如果输入 'c' 则取消删除操作
@@ -253,6 +252,7 @@ function addDomainPort() {
 
     read -n 1 -s -r -p "按任意键继续..."
 }
+
 
 
 
