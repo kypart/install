@@ -223,12 +223,15 @@ function deleteDomainPort() {
         # 使用 awk 查找并删除包含指定域名的整个 server 块
         awk -v domain="$domain_name" '
         # 如果遇到 server_name 和指定域名匹配，则进入块内
-        $0 ~ ("server_name " domain ";") { in_block = 1; }
-        
+        $0 ~ ("server_name " domain ";") { 
+            in_block = 1;  # 进入删除块
+            next;           # 跳过当前行
+        }
+
         # 如果当前在块内并且遇到 "}"，则块结束
         in_block && $0 ~ /^}/ { 
-            in_block = 0; 
-            next;  # 跳过结束行
+            in_block = 0;   # 退出删除块
+            next;            # 跳过结束行
         }
 
         # 只有不在删除的块内时，才打印当前行
