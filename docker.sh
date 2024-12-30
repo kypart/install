@@ -12,8 +12,20 @@ fi
 # 清理和删除 Docker 和 Docker Compose
 echo "开始清理和删除现有的 Docker 和 Docker Compose..."
 
-# 停止 Docker 服务
-sudo systemctl stop docker
+# 停止所有正在运行的容器
+sudo docker stop $(sudo docker ps -aq)
+
+# 删除所有容器
+sudo docker rm $(sudo docker ps -aq)
+
+# 删除所有镜像
+sudo docker rmi $(sudo docker images -q)
+
+# 删除所有网络
+sudo docker network rm $(sudo docker network ls -q)
+
+# 删除所有卷
+sudo docker volume rm $(sudo docker volume ls -q) 
 
 # 卸载 Docker 包和相关文件
 if [ "$OS" == "ubuntu" ]; then
