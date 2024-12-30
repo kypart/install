@@ -196,7 +196,7 @@ function addDomainPort() {
     echo -e "      return 403;" >> "$nginx_domain_conf_path"
 
     echo -e "  }\n}" >> "$nginx_domain_conf_path"
-    restartNginx
+    restartnginx
     Echo_Red "域名和端口已成功添加到Nginx配置文件。"
     read -n 1 -s -r -p "按任意键继续..."
 }
@@ -245,7 +245,7 @@ function deleteDomainPort() {
         ' "$nginx_domain_conf_path" > temp_config && mv temp_config "$nginx_domain_conf_path"
 
         # 重启 Nginx 服务以应用修改
-        restartNginx
+        restartnginx
 
         Echo_Red "域名和端口已成功删除：$domain_name"
     fi
@@ -314,12 +314,20 @@ function deleteDomainPort2() {
 }
 
 
+
+
+# 重启Nginx 2
+function restartnginx() {
+    checkUbuntu
+    sudo service nginx restart
+}
+
 # 重启Nginx
 function restartNginx() {
     checkUbuntu
     sudo service nginx restart
     Echo_Red "Nginx已成功重启。"
-  #  read -n 1 -s -r -p "按任意键继续..."
+    read -n 1 -s -r -p "按任意键继续..."
 }
 
 # 查看Nginx运行状态
