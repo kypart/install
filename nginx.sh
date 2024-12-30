@@ -52,6 +52,7 @@ function installNginx() {
         # 确保 PM2 安装或更新成功
         if ! command_exists pm2; then
             echo "PM2 安装或更新失败，请检查 npm 配置。"
+            sleep 3  # 暂停3秒
         fi
 
         # 3. 禁用 PM2 的自动启动功能
@@ -206,13 +207,9 @@ function addDomainPort() {
     echo -e "    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> "$nginx_domain_conf_path"
     echo -e "    client_max_body_size 200m;" >> "$nginx_domain_conf_path"
     echo -e "    }" >> "$nginx_domain_conf_path"
-    # Wordpress 静态文件缓存：                    location ~* .(jpg|jpeg|png|gif|ico|css|js)$ {
-#    echo -e "}\n# Wordpress 静态文件缓存：\n location ~* ^/wp-content/uploads/.*\.(jpg|jpeg|png|gif|ico|css|js)$ {" >> "$nginx_domain_conf_path"
-#    echo -e "      expires 365d;" >> "$nginx_domain_conf_path"
-#    echo -e "    }" >> "$nginx_domain_conf_path"
-
+    
     # 防止爬虫抓取 防止爬虫抓取可能会对网站的SEO产生一定的影响，具体取决于你选择的实现方式和执行策略
-    echo -e "# 防止爬虫抓取 \n if (\$http_user_agent ~* \"360Spider|JikeSpider|Spider|spider|bot|Bot|2345Explorer|curl|wget|webZIP|qihoobot|Baiduspider|Googlebot|Googlebot-Mobile|Googlebot-Image|Mediapartners-Google|Adsbot-Google|Feedfetcher-Google|Yahoo! Slurp|Yahoo! Slurp China|YoudaoBot|Sosospider|Sogou spider|Sogou web spider|MSNBot|ia_archiver|Tomato Bot|NSPlayer|bingbot\") {" >> "$nginx_domain_conf_path"
+    # echo -e " if (\$http_user_agent ~* \"360Spider|JikeSpider|Spider|spider|bot|Bot|2345Explorer|curl|wget|webZIP|qihoobot|Baiduspider|Googlebot|Googlebot-Mobile|Googlebot-Image|Mediapartners-Google|Adsbot-Google|Feedfetcher-Google|Yahoo! Slurp|Yahoo! Slurp China|YoudaoBot|Sosospider|Sogou spider|Sogou web spider|MSNBot|ia_archiver|Tomato Bot|NSPlayer|bingbot\") {" >> "$nginx_domain_conf_path"
     echo -e "      return 403;" >> "$nginx_domain_conf_path"
 
     echo -e "  }\n}" >> "$nginx_domain_conf_path"
@@ -221,90 +218,8 @@ function addDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
-
-
-
-
- function deleteDomainPort() {
-    # 检查配置文件是否存在
-    [ ! -f "$nginx_domain_conf_path" ] && { 
-        Echo_Red "配置文件不存在：$nginx_domain_conf_path"; 
-        read -n 1 -s -r -p "按任意键继续..."; 
-        return; 
-    }
-
-    # 查看当前的 Nginx 配置
-    viewNginxConfig
-
-    echo
-    Echo_Red "请输入要删除的域名（例如：www.6666.com），或输入 'c' 取消:"
-    read -r domain_name
-
-    # 如果输入 'c' 则取消删除操作
-    if [[ "$domain_name" == "c" ]]; then
-        Echo_Red "取消删除，未做任何改变。"
-    else
-        # 使用 awk 查找并删除包含指定域名的整个 server 块
-        awk -v domain="$domain_name" '
-        BEGIN { 
-            in_block = 0;  # 标记是否在删除的 server 块内
-            brace_count = 0;  # 用于计数括号数量
-        }
-
-        # 找到包含 server_name 的行时，标记删除
-        /server_name/ && $0 ~ domain {
-            in_block = 1;  # 进入删除状态
-            brace_count = 1;  # 计数该 server 块的开始
-            next;  # 跳过当前行
-        }
-
-        # 删除模式下，删除该块，直到遇到 "}"
-        in_block {
-            if ($0 ~ /server {/ ) {
-                brace_count++;  # 进入新的括号层次
-            }
-            if ($0 ~ /}/ ) {
-                brace_count--;  # 退出括号层次
-                if (brace_count == 0) {
-                    in_block = 0;  # 完成删除
-                    next;  # 跳过当前行
-                }
-            }
-            next;  # 跳过当前行
-        }
-
-        # 如果不在删除块中，则正常打印
-        { print }
-        ' "$nginx_domain_conf_path" > temp_config && mv temp_config "$nginx_domain_conf_path"
-
-        # 重启 Nginx 服务以应用修改
-        restartNginx
-
-        Echo_Red "域名和端口已成功删除：$domain_name"
-    fi
-
-    read -n 1 -s -r -p "按任意键继续..."
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # 删除指定域名的服务器块
-function deleteDomainPort2() {
+function deleteDomainPort() {
     # 检查配置文件是否存在
     [ ! -f "$nginx_domain_conf_path" ] && { 
         Echo_Red "配置文件不存在：$nginx_domain_conf_path"; 
@@ -346,8 +261,6 @@ function deleteDomainPort2() {
 
     read -n 1 -s -r -p "按任意键继续..."
 }
-
-
 
 
 # 重启Nginx 2
