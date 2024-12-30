@@ -201,7 +201,8 @@ function addDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
-function deleteDomainPort() {
+
+ function deleteDomainPort() {
     # 检查配置文件是否存在
     [ ! -f "$nginx_domain_conf_path" ] && { 
         Echo_Red "配置文件不存在：$nginx_domain_conf_path"; 
@@ -222,16 +223,16 @@ function deleteDomainPort() {
     else
         # 使用 awk 查找并删除包含指定域名的整个 server 块
         awk -v domain="$domain_name" '
-        # 如果遇到 server_name 和指定域名匹配，则进入块内
-        $0 ~ ("server_name " domain ";") { 
-            in_block = 1;  # 进入删除块
-            next;           # 跳过当前行
+        # 标记进入匹配块，找到 server_name 后开始删除块
+        $0 ~ ("server_name " domain ";") {
+            in_block = 1;
+            next;
         }
 
-        # 如果当前在块内并且遇到 "}"，则块结束
-        in_block && $0 ~ /^}/ { 
-            in_block = 0;   # 退出删除块
-            next;            # 跳过结束行
+        # 处理 server 块的结束，遇到 } 后停止删除
+        in_block && $0 ~ /^}/ {
+            in_block = 0;
+            next;
         }
 
         # 只有不在删除的块内时，才打印当前行
@@ -246,6 +247,7 @@ function deleteDomainPort() {
 
     read -n 1 -s -r -p "按任意键继续..."
 }
+
 
 
 # 删除指定域名的服务器块
@@ -298,7 +300,7 @@ function restartNginx() {
     checkUbuntu
     sudo service nginx restart
     Echo_Red "Nginx已成功重启。"
-    read -n 1 -s -r -p "按任意键继续..."
+  #  read -n 1 -s -r -p "按任意键继续..."
 }
 
 # 查看Nginx运行状态
