@@ -201,8 +201,53 @@ function addDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
-# 删除指定域名的服务器块
 function deleteDomainPort() {
+    [ ! -f "$nginx_domain_conf_path" ] && { 
+        Echo_Red "配置文件不存在：$nginx_domain_conf_path"; 
+        read -n 1 -s -r -p "按任意键继续..."; 
+        return; 
+    }
+
+    viewNginxConfig
+
+    echo
+    Echo_Red "请输入要删除的域名（例如：example.com），或输入 'c' 取消:"
+    read -r domain_name
+
+    # 检查是否输入 'c' 取消
+    if [[ "$domain_name" == "c" ]]; then
+        Echo_Red "取消删除，未做任何改变。"
+    else
+        # 使用 awk 动态检测 server 块范围并删除
+        awk -v domain="$domain_name" '
+        $0 ~ ("server_name " domain ";") { 
+            in_block = 1; 
+            start = NR; 
+        }
+        in_block && $0 ~ /^}/ { 
+            in_block = 0; 
+            end = NR; 
+        }
+        in_block { next }  # 跳过块内的所有行
+        NR < start || NR > end  # 输出范围外的行
+        ' "$nginx_domain_conf_path" > temp_config
+
+        # 检查操作结果并覆盖原文件
+        if [[ -s temp_config ]]; then
+            mv temp_config "$nginx_domain_conf_path"
+            restartNginx
+            Echo_Red "域名和服务器块已成功删除：$domain_name"
+        else
+            Echo_Red "删除失败，检查配置文件或域名是否存在。"
+            rm -f temp_config
+        fi
+    fi
+    read -n 1 -s -r -p "按任意键继续..."
+}
+ 
+
+# 删除指定域名的服务器块
+function deleteDomainPort2() {
     [ ! -f "$nginx_domain_conf_path" ] && { Echo_Red "配置文件不存在：$nginx_domain_conf_path"; read -n 1 -s -r -p "按任意键继续..."; return; }
 
     viewNginxConfig
