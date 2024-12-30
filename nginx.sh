@@ -201,7 +201,7 @@ function addDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
-function deleteDomainPort2() {
+function deleteDomainPort() {
     # 检查配置文件是否存在
     [ ! -f "$nginx_domain_conf_path" ] && { 
         Echo_Red "配置文件不存在：$nginx_domain_conf_path"; 
