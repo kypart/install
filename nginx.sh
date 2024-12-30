@@ -178,17 +178,20 @@ function addDomainPort() {
     # 检查域名是否在配置文件中
     checkDomainExists "$domain"
     if [[ $? -ne 1 ]]; then  # 如果返回值不为0（表示没有找到域名），则退出
-       Echo_Red "已经有该域名配置！"
+        Echo_Red "已经有该域名配置！"
+        sleep 3  # 暂停3秒
         return
     fi
   
     # 验证域名和端口
     if ! [[ "$domain" =~ ^[a-zA-Z0-9.-]+$ ]]; then
         Echo_Red "域名格式无效。"
+        sleep 3  # 暂停3秒
         return
     fi
     if ! [[ "$port" =~ ^[0-9]+$ ]] || [ "$port" -le 0 ] || [ "$port" -gt 65535 ]; then
         Echo_Red "端口号无效。"
+        sleep 3  # 暂停3秒
         return
     fi
 
