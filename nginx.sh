@@ -217,7 +217,7 @@ function addDomainPort() {
     viewNginxConfig
 
     echo
-    Echo_Red "请输入要删除的域名（例如：www.fiyma4444.com），或输入 'c' 取消:"
+    Echo_Red "请输入要删除的域名（例如：www.6666.com），或输入 'c' 取消:"
     read -r domain_name
 
     # 如果输入 'c' 则取消删除操作
