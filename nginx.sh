@@ -201,6 +201,7 @@ function addDomainPort() {
     read -n 1 -s -r -p "按任意键继续..."
 }
 
+
 function deleteDomainPort() {
     # 检查配置文件是否存在
     [ ! -f "$nginx_domain_conf_path" ] && { 
@@ -213,7 +214,7 @@ function deleteDomainPort() {
     viewNginxConfig
 
     echo
-    Echo_Red "请输入要删除的域名（例如：qq.11），或输入 'c' 取消:"
+    Echo_Red "请输入要删除的域名（例如：tt0.vv），或输入 'c' 取消:"
     read -r domain_name
 
     # 如果输入 'c' 则取消删除操作
@@ -224,21 +225,21 @@ function deleteDomainPort() {
         awk -v domain="$domain_name" '
         BEGIN { in_block = 0; }
 
-        # 查找包含 server_name 的行时进入删除块
+        # 如果匹配到指定的 server_name，就标记进入删除状态
         $0 ~ ("server_name " domain ";") {
-            in_block = 1;  # 标记开始删除块
+            in_block = 1;  # 进入删除状态
         }
 
-        # 如果在删除块中，遇到 } 时退出删除块
+        # 如果在删除状态中，遇到 "}" 就退出删除状态
         in_block && $0 ~ /^}/ {
             in_block = 0;
-            next;  # 跳过 } 行
+            next;  # 跳过这行 "}"
         }
 
-        # 如果在删除块中，跳过当前行
+        # 如果在删除状态中，跳过当前行（即删除当前行）
         in_block { next }
 
-        # 输出非删除块的行
+        # 其他行正常输出
         { print }
         ' "$nginx_domain_conf_path" > temp_config && mv temp_config "$nginx_domain_conf_path"
 
@@ -250,6 +251,18 @@ function deleteDomainPort() {
 
     read -n 1 -s -r -p "按任意键继续..."
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
